@@ -161,7 +161,8 @@ public class GameView extends View {
         }
         return true;
     }
-
+    private int timeCount = 0;
+    private  int deldayTime = 100;
     public void draw(Canvas canvas){
         super.draw(canvas);
         canvas.drawColor(0xFF065700);
@@ -170,16 +171,27 @@ public class GameView extends View {
         }
         if(isPlaying){
             snake.update();
-            if(snake.getArrPartSnake().get(0).getX() < this.arrGrass.get(0).getX()
-                ||snake.getArrPartSnake().get(0).getY() < this.arrGrass.get(0).getY()
-                ||snake.getArrPartSnake().get(0).getY()+sizeElementMap>this.arrGrass.get(this.arrGrass.size()-1).getY() + sizeElementMap
-                    ||snake.getArrPartSnake().get(0).getX()+sizeElementMap>this.arrGrass.get(this.arrGrass.size()-1).getX() + sizeElementMap){
-                gameOver();
-            }
+//            if(snake.getArrPartSnake().get(0).getX() < this.arrGrass.get(0).getX()
+//                ||snake.getArrPartSnake().get(0).getY() < this.arrGrass.get(0).getY()
+//                ||snake.getArrPartSnake().get(0).getY()+sizeElementMap>this.arrGrass.get(this.arrGrass.size()-1).getY() + sizeElementMap
+//                    ||snake.getArrPartSnake().get(0).getX()+sizeElementMap>this.arrGrass.get(this.arrGrass.size()-1).getX() + sizeElementMap){
+//                gameOver();
+
             for (int i = 1; i < snake.getArrPartSnake().size(); i++){
                 if (snake.getArrPartSnake().get(0).getrBody().intersect(snake.getArrPartSnake().get(i).getrBody())){
                     gameOver();
                 }
+            }
+            if (snake.getArrPartSnake().get(0).getX() < this.arrGrass.get(0).getX()) {
+                snake.getArrPartSnake().get(0).setX(this.arrGrass.get(this.arrGrass.size() - 1).getX());
+            } else if (snake.getArrPartSnake().get(0).getX() + sizeElementMap > this.arrGrass.get(this.arrGrass.size() - 1).getX() + sizeElementMap) {
+                snake.getArrPartSnake().get(0).setX(this.arrGrass.get(0).getX());
+            }
+
+            if (snake.getArrPartSnake().get(0).getY() < this.arrGrass.get(0).getY()) {
+                snake.getArrPartSnake().get(0).setY(this.arrGrass.get(this.arrGrass.size() - 1).getY());
+            } else if (snake.getArrPartSnake().get(0).getY() + sizeElementMap > this.arrGrass.get(this.arrGrass.size() - 1).getY() + sizeElementMap) {
+                snake.getArrPartSnake().get(0).setY(this.arrGrass.get(0).getY());
             }
         }
         snake.drawSnake(canvas);
@@ -201,7 +213,11 @@ public class GameView extends View {
                 MainActivity.txt_best_score.setText(bestScore+"");
             }
         }
-        handler.postDelayed(r, 100);
+        timeCount++;
+        if(timeCount % 500 == 0){
+            deldayTime -=10;
+        }
+        handler.postDelayed(r, deldayTime);
     }
 
     private void gameOver() {
