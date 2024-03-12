@@ -1,8 +1,12 @@
 package com.example.snakegame;
 
+import static com.example.snakegame.GameView.sizeElementMap;
+
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
+
+import java.util.ArrayList;
 
 public class Apple {
     private Bitmap bm;
@@ -49,10 +53,21 @@ public class Apple {
     }
 
     public Rect getR() {
-        return new Rect(this.x, this.y, this.x+GameView.sizeElementMap, this.y+GameView.sizeElementMap);
+        return new Rect(this.x, this.y, this.x+ sizeElementMap, this.y+ sizeElementMap);
     }
 
     public void setR(Rect r) {
         this.r = r;
+    }
+
+    public ArrayList<Rect> getBigAppleRects() {
+        ArrayList<Rect> rects = new ArrayList<>();
+        int radius = getBm().getWidth() / 2;
+        for (int x = getX(); x < getX() + getBm().getWidth(); x += sizeElementMap) {
+            for (int y = getY(); y < getY() + getBm().getHeight(); y += sizeElementMap) {
+                rects.add(new Rect(x, y, x + sizeElementMap, y + sizeElementMap));
+            }
+        }
+        return rects;
     }
 }
