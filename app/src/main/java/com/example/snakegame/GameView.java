@@ -8,6 +8,7 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.media.SoundPool;
 import android.os.Build;
 import android.os.Handler;
@@ -15,12 +16,14 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
+
 import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Random;
 
 public class GameView extends View {
+    private MediaPlayer mediaPlayer;
     private Bitmap bmGrass1, bmGrass2, bmSnake1, bmApple;
     private ArrayList<Grass> arrGrass = new ArrayList<>();
     private int w = 12, h=21;
@@ -39,10 +42,15 @@ public class GameView extends View {
     private boolean loadedsound;
     private SoundPool soundPool;
 
+
     public GameView(Context context, @Nullable AttributeSet attrs) {
+
         super(context, attrs);
         this.context = context;
         SharedPreferences sp = context.getSharedPreferences("gamesetting", Context.MODE_PRIVATE);
+        // Initialize the MediaPlayer for background music
+        mediaPlayer = MediaPlayer.create(context, R.raw.background);
+        mediaPlayer.setLooping(true); // Loop the background music
         if(sp!=null){
             bestScore = sp.getInt("bestscore",0);
         }
@@ -193,6 +201,15 @@ public class GameView extends View {
             } else if (snake.getArrPartSnake().get(0).getY() + sizeElementMap > this.arrGrass.get(this.arrGrass.size() - 1).getY() + sizeElementMap) {
                 snake.getArrPartSnake().get(0).setY(this.arrGrass.get(0).getY());
             }
+            // Start background music when the game starts
+            if (!mediaPlayer.isPlaying()) {
+                mediaPlayer.start();
+            }
+        } else {
+            // Stop background music if the game is not playing
+            if (mediaPlayer.isPlaying()) {
+                mediaPlayer.pause();
+            }
         }
         snake.drawSnake(canvas);
         apple.draw(canvas);
@@ -220,6 +237,7 @@ public class GameView extends View {
         handler.postDelayed(r, deldayTime);
     }
 
+
     private void gameOver() {
         isPlaying = false;
         MainActivity.dialogScore.show();
@@ -227,6 +245,9 @@ public class GameView extends View {
         MainActivity.txt_dialog_score.setText(score+"");
         if(loadedsound){
             int streamId = this.soundPool.play(this.soundDie, (float)0.5, (float)0.5, 1, 0, 1f);
+        }
+        if (mediaPlayer.isPlaying()) {
+            mediaPlayer.stop();
         }
     }
 
