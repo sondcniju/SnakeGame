@@ -14,11 +14,13 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
+
     public static ImageView img_swipe;
     public static Dialog dialogScore;
     private GameView gv;
     public static TextView txt_score, txt_best_score, txt_dialog_score, txt_dialog_best_score;
     private int currentSkinIndex = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,10 +40,10 @@ public class MainActivity extends AppCompatActivity {
     private void dialogScore() {
         int bestScore = 0;
         SharedPreferences sp = this.getSharedPreferences("gamesetting", Context.MODE_PRIVATE);
-        if(sp!=null){
-            bestScore = sp.getInt("bestscore",0);
+        if (sp != null) {
+            bestScore = sp.getInt("bestscore", 0);
         }
-        MainActivity.txt_best_score.setText(bestScore+"");
+        MainActivity.txt_best_score.setText(bestScore + "");
         dialogScore = new Dialog(this);
         dialogScore.setContentView(R.layout.dialog_start);
         txt_dialog_score = dialogScore.findViewById(R.id.txt_dialog_score);
