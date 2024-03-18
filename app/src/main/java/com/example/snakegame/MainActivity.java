@@ -14,6 +14,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
+
     public static ImageView img_swipe;
     public static Dialog dialogScore;
     private GameView gv;

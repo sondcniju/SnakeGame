@@ -8,6 +8,7 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.media.SoundPool;
 import android.os.Build;
 import android.os.Handler;
@@ -21,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class GameView extends View {
+    private MediaPlayer mediaPlayer;
     private Bitmap bmGrass1, bmGrass2, bmSnake1, bmApple;
     private ArrayList<Grass> arrGrass = new ArrayList<>();
     private int w = 12, h = 21;
@@ -43,9 +45,13 @@ public class GameView extends View {
         super(context, attrs);
         this.context = context;
         SharedPreferences sp = context.getSharedPreferences("gamesetting", Context.MODE_PRIVATE);
+        // Initialize the MediaPlayer for background music
+        mediaPlayer = MediaPlayer.create(context, R.raw.background);
+        mediaPlayer.setLooping(true); // Loop the background music
         if (sp != null) {
             bestScore = sp.getInt("bestscore", 0);
         }
+        //tạo map
         bmGrass1 = BitmapFactory.decodeResource(this.getResources(), R.drawable.grass);
         bmGrass1 = Bitmap.createScaledBitmap(bmGrass1, sizeElementMap, sizeElementMap, true);
         bmGrass2 = BitmapFactory.decodeResource(this.getResources(), R.drawable.grass03);
@@ -130,6 +136,7 @@ public class GameView extends View {
     }
 
     @Override
+    // điều khiển rắn
     public boolean onTouchEvent(MotionEvent event) {
         int a = event.getActionMasked();
         switch (a) {
@@ -185,6 +192,7 @@ public class GameView extends View {
 
     public void draw(Canvas canvas) {
         super.draw(canvas);
+        //điều kiện để điều khiển và vẽ thân theo đầu rắn và điều kiện kết thúc game
         canvas.drawColor(0xFF065700);
         for (int i = 0; i < arrGrass.size(); i++) {
             canvas.drawBitmap(arrGrass.get(i).getBm(), arrGrass.get(i).getX(), arrGrass.get(i).getY(), null);
@@ -270,6 +278,19 @@ public class GameView extends View {
             deldayTime = initialDelay;
         }
     }
+    private void startBackgroundMusic() {
+        if (mediaPlayer != null) {
+            mediaPlayer.start();
+        }
+    }
+
+    private void stopBackgroundMusic() {
+        if (mediaPlayer != null) {
+            mediaPlayer.stop();
+            mediaPlayer.release();
+            mediaPlayer = null;
+        }
+    }
 
     private void gameOver() {
         isPlaying = false;
@@ -284,8 +305,22 @@ public class GameView extends View {
         timeCount = 0; // Đặt lại biến timeCount về 0
         handler.postDelayed(r, deldayTime); // Đặt lịch cho resetRunnable mới với tốc độ ban đầu
         appleCounterForBigApple = 0;
+        stopBackgroundMusic();
     }
 
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        // Stop background music and release resources when the view is detached from window
+        stopBackgroundMusic();
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        // Start background music when the view is attached to window
+        startBackgroundMusic();
+    }
     public void reset() {
         for (int i = 0; i < h; i++) {
             for (int j = 0; j < w; j++) {
