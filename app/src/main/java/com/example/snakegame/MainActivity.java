@@ -92,6 +92,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateSnakeSkin() {
-        gv.setSnakeSkin(currentSkinIndex);
+
     }
 }
