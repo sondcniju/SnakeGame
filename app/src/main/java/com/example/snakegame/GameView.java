@@ -107,6 +107,21 @@ public class GameView extends View {
         soundDie = this.soundPool.load(context, R.raw.die, 1);
     }
 
+    private int[] snakeSkinResources = {
+            R.drawable.snake1,
+            R.drawable.snake2,
+            R.drawable.snake3,
+            R.drawable.snake4
+    };
+
+    public void setSnakeSkin(int skinIndex) {
+        if (skinIndex >= 0 && skinIndex < snakeSkinResources.length) {
+            Bitmap snakeSkin = BitmapFactory.decodeResource(getResources(), snakeSkinResources[skinIndex]);
+            bmSnake1 = Bitmap.createScaledBitmap(snakeSkin, 14 * sizeElementMap, sizeElementMap, true);
+            snake.setBm(bmSnake1);
+        }
+    }
+
     private int[] randomApple() {
         int[] xy = new int[2];
         Random r = new Random();
