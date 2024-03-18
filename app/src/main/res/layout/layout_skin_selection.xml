@@ -12,38 +12,44 @@
         android:textSize="24sp"
         android:layout_marginBottom="16dp" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <GridLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center">
+        android:columnCount="2"
+        android:rowCount="2">
 
         <ImageView
             android:id="@+id/iv_skin_option1"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:src="@drawable/snake1"
-            android:layout_marginHorizontal="16dp" />
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginVertical="8dp" />
 
         <ImageView
             android:id="@+id/iv_skin_option2"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:src="@drawable/snake2"
-            android:layout_marginHorizontal="16dp" />
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginVertical="8dp" />
 
         <ImageView
             android:id="@+id/iv_skin_option3"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:src="@drawable/snake3"
-            android:layout_marginHorizontal="16dp" />
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginVertical="8dp" />
 
         <ImageView
             android:id="@+id/iv_skin_option4"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:src="@drawable/snake4"
-            android:layout_marginHorizontal="16dp" />
-    </LinearLayout>
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginVertical="8dp" />
+
+    </GridLayout>
+
 </LinearLayout>
