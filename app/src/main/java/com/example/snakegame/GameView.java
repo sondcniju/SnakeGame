@@ -170,7 +170,9 @@ public class GameView extends View {
         return true;
     }
     private int timeCount = 0;
-    private  int deldayTime = 100;
+    private  int deldayTime = 500;
+    private int appleCounterForBigApple = 0; // Đếm số lần ăn táo
+    private int bigAppleInterval = 3; // Số lần cần ăn táo để có quả táo lớn (ban đầu là 3)
     public void draw(Canvas canvas){
         super.draw(canvas);
         canvas.drawColor(0xFF065700);
@@ -212,24 +214,52 @@ public class GameView extends View {
             }
         }
         snake.drawSnake(canvas);
-        apple.draw(canvas);
-        if(snake.getArrPartSnake().get(0).getrBody().intersect(apple.getR())){
-            if(loadedsound){
-                int streamId = this.soundPool.play(this.soundEat, (float)0.5, (float)0.5, 1, 0, 1f);
+        Rect snakeHead = new Rect(
+                snake.getArrPartSnake().get(0).getX(),
+                snake.getArrPartSnake().get(0).getY(),
+                snake.getArrPartSnake().get(0).getX() + sizeElementMap,
+                snake.getArrPartSnake().get(0).getY() + sizeElementMap
+        );
+
+        ArrayList<Rect> bigAppleRects = apple.getBigAppleRects();
+        boolean hitBigApple = false;
+        for (Rect rect : bigAppleRects) {
+            if (snakeHead.intersect(rect)) {
+                hitBigApple = true;
+                break;
+            }
+        }
+
+        if (hitBigApple) {
+            if (loadedsound) {
+                int streamId = this.soundPool.play(this.soundEat, (float) 0.5, (float) 0.5, 1, 0, 1f);
             }
             apple.reset(arrGrass.get(randomApple()[0]).getX(), arrGrass.get(randomApple()[1]).getY());
             snake.addPart();
-            score++;
-            MainActivity.txt_score.setText(score+"");
-            if(score > bestScore){
+
+            appleCounterForBigApple++;
+
+            if (appleCounterForBigApple >= bigAppleInterval) {
+                score += 2;
+                apple.setBm(Bitmap.createScaledBitmap(bmApple, sizeElementMap * 2, sizeElementMap * 2, true));
+                appleCounterForBigApple = 0;
+                bigAppleInterval++;
+            } else {
+                apple.setBm(Bitmap.createScaledBitmap(bmApple, sizeElementMap, sizeElementMap, true));
+                score++;
+            }
+
+            MainActivity.txt_score.setText(score + "");
+            if (score > bestScore) {
                 bestScore = score;
                 SharedPreferences sp = context.getSharedPreferences("gamesetting", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sp.edit();
                 editor.putInt("bestscore", bestScore);
                 editor.apply();
-                MainActivity.txt_best_score.setText(bestScore+"");
+                MainActivity.txt_best_score.setText(bestScore + "");
             }
         }
+        apple.draw(canvas);
         timeCount++;
         if(timeCount % 500 == 0){
             deldayTime -=10;
